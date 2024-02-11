@@ -41,3 +41,6 @@ footer p {
 .add-article {
   margin-bottom: 15px;
 }
+.clear {
+  clear: both;
+}

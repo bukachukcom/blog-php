@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $mysqli
+ * @var $pdo
  */
 if (count($_POST) > 0) {
     $email = $_POST['email'] ?? null;
@@ -9,9 +9,9 @@ if (count($_POST) > 0) {
 
     $password = password_hash($password, PASSWORD_DEFAULT);
 
-    $mysqli->query("INSERT INTO user SET email = '" . $email . "', password = '" . $password . "'");
-    header('Location: /?act=login');
-    die();
+    $stmt = $pdo->prepare("INSERT INTO user SET email = ?, password = ?");
+    $stmt->execute([$email, $password]);
+    redirect('/?act=login');
 }
 
 require_once 'templates/register.php';

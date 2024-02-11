@@ -1,3 +1,8 @@
+<?php if (isset($user) && $user['isAdmin'] == 1): ?>
+    <a href="/?act=adminArticles">
+        <button type="button" class="btn btn-primary add-article">Admin articles</button>
+    </a>
+<?php endif ?>
 <?php if (isset($user) && $user): ?>
 <a href="/?act=articles">
     <button type="button" class="btn btn-success add-article">Articles</button>
@@ -11,4 +16,8 @@
 <a href="/?act=logout">
     <button type="button" class="btn btn-dark add-article">Logout</button>
 </a>
+<?php else: ?>
+    <a href="/?act=login">
+        <button type="button" class="btn btn-success add-article">Login</button>
+    </a>
 <?php endif ?>

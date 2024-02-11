@@ -1,8 +1,8 @@
 <?php
 /**
- * @var $mysqli
+ * @var $pdo
  */
-$user = checkUser($mysqli);
+$user = checkUser($pdo);
 $error = '';
 if (count($_POST)) {
     $title = strip_tags($_POST['title'] ?? null);
@@ -15,9 +15,9 @@ if (count($_POST)) {
     } else {
         $filename = upload($user['id']);
 
-        $mysqli->query("INSERT INTO article SET img = '" . $filename . "', userId = " . $user['id'] . ", title = '" . $title . "', content = '" . $content . "', createdAt = NOW()");
-        header('Location: /?act=articles');
-        die();
+        $stmt = $pdo->prepare("INSERT INTO article SET img = ?, userId = ?, title = ?, content = ?, createdAt = NOW()");
+        $stmt->execute([$filename, $user['id'], $title, $content]);
+        redirect('/?act=articles');
     }
 }
 

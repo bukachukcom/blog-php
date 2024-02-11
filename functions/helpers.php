@@ -1,28 +1,56 @@
 <?php
-function checkUser($mysqli): array
+function redirect(string $uri): void
+{
+    header('Location: ' . $uri);
+    die();
+}
+
+function checkUser($pdo): array
 {
     if (empty($_SESSION['userId'])) {
-        header('Location: /?act=login');
-        die();
+        redirect('/?act=login');
     }
     $userId = (int)$_SESSION['userId'];
-    $result = $mysqli->query("SELECT * from user WHERE id = '" . $userId . "' LIMIT 1");
-    $user = $result->fetch_assoc();
+    $stmt = $pdo->prepare("SELECT * from user WHERE id = ? LIMIT 1");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch();
     if (!$user) {
-        header('Location: /?act=login');
-        die();
+        redirect('/?act=login');
     }
 
     return $user;
 }
 
-function getUserArticle($mysqli, int $id, int $userId): array
+function getUser($pdo): array
 {
-    $result = $mysqli->query("SELECT * FROM article WHERE id = " . $id . " AND userId = " . $userId);
-    $article = $result->fetch_assoc();
+    $userId = (int)($_SESSION['userId'] ?? null);
+    if (!$userId) {
+        return [];
+    }
+
+    $stmt = $pdo->prepare("SELECT * from user WHERE id = ? LIMIT 1");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch();
+    if (!$user) {
+        return [];
+    }
+
+    return $user;
+}
+
+function getUserArticle($pdo, int $id, array $user): array
+{
+    if ($user['isAdmin'] == 1) {
+        $stmt = $pdo->prepare("SELECT * FROM article WHERE id = ?");
+        $stmt->execute([$id]);
+    } else {
+        $stmt = $pdo->prepare("SELECT * FROM article WHERE id = ? AND userId = ?");
+        $stmt->execute([$id, $user['id']]);
+    }
+
+    $article = $stmt->fetch();
     if (!$article) {
-        header('Location: /?act=articles');
-        die();
+        redirect('/?act=articles');
     }
 
     return $article;

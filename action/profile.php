@@ -1,17 +1,17 @@
 <?php
 /**
- * @var $mysqli
+ * @var $pdo
  */
-$user = checkUser($mysqli);
+$user = checkUser($pdo);
 
 if (count($_POST)) {
     $name = $_POST['name'] ?? null;
     $surname = $_POST['surname'] ?? null;
     $phone = $_POST['phone'] ?? null;
     $about = $_POST['about'] ?? null;
-    $mysqli->query("UPDATE user SET name = '" . $name . "', surname = '" . $surname . "', phone = '" . $phone . "', about = '" . $about . "' WHERE id = ". $user['id']);
-    header('Location: /?act=profile');
-    die();
+    $stmt = $pdo->prepare("UPDATE user SET name = ?, surname = ?, phone = ?, about = ? WHERE id = ?");
+    $stmt->execute([$name, $surname, $phone, $about, $_SESSION['userId']]);
+    redirect('/?act=articles');
 }
 
 require_once 'templates/profile.php';

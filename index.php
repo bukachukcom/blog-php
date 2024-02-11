@@ -5,52 +5,34 @@ ini_set('display_errors', 1);
 
 session_start();
 
-require_once 'config.php';
+require_once 'config/config.php';
+require_once 'config/router.php';
 require_once 'functions/helpers.php';
 
-$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+$dsn = "mysql:host=" . DB_HOST .";dbname=" . DB_NAME . ";charset=utf8";
+$options = [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
+$pdo = new PDO($dsn, DB_USER, DB_PASSWORD, $options);
 
 // Здесь скорее всего нужно поменять на $_REQUEST (в этот массив приходят данные и из POST и GET, нужно заменить и проверить что все работает)
-if (isset($_GET['act'])) {
-    switch ($_GET['act']) {
-        case 'register':
-            require_once 'action/register.php';
-            break;
-        case 'login':
-            require_once 'action/login.php';
-            break;
-        case 'profile':
-            require_once 'action/profile.php';
-            break;
-        case 'add':
-            require_once 'action/add.php';
-            break;
-        case 'articles':
-            require_once 'action/articles.php';
-            break;
-        case 'edit':
-            require_once 'action/edit.php';
-            break;
-        case 'delete':
-            require_once 'action/delete.php';
-            break;
-        case 'logout':
-            require_once 'action/logout.php';
-            break;
-        case 'view':
-            require_once 'action/view.php';
-            break;
+if (isset($_REQUEST['act'])) {
+    if (!empty($routers[$_REQUEST['act']])) {
+        require_once $routers[$_REQUEST['act']];
     }
     die();
 }
 
 $user = null;
-$userId = intval($_SESSION['userId'] ?? null);
+$userId = (int)($_SESSION['userId'] ?? null);
 if ($userId) {
-    $result = $mysqli->query("SELECT * from user WHERE id = '" . $userId . "' LIMIT 1");
-    $user = $result->fetch_assoc();
+    $stmt = $pdo->prepare("SELECT * from user WHERE id = ? LIMIT 1");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch();
 }
 
-$result = $mysqli->query("SELECT * from article ORDER BY id DESC LIMIT 9");
+$stmt = $pdo->query("SELECT * from article ORDER BY id DESC LIMIT 9");
 
 require_once 'templates/index.php';

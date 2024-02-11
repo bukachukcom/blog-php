@@ -1,18 +1,16 @@
 <?php include_once 'templates/header.php'; ?>
+<?php
+/**
+ * @var $stmt
+ * @var $user array
+ */
+?>
 <main role="main">
     <div class="album py-5 bg-light">
         <div class="container">
-            <a href="/?act=login">
-                <button type="button" class="btn btn-success add-article">Login</button>
-            </a>
-            <a href="/?act=register">
-                <button type="button" class="btn btn-primary add-article">Register</button>
-            </a>
-            <a href="">
-                <button type="button" class="btn btn-dark add-article">All blogs</button>
-            </a>
+            <?php include_once 'templates/menu.php'; ?>
             <div class="row">
-                <?php while($row = $result->fetch_assoc()): ?>
+                <?php while($row = $stmt->fetch()): ?>
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
                         <img class="card-img-top" src="/images/<?=$row['img']?>" alt="Card image cap">

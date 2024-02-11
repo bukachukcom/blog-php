@@ -1,4 +1,9 @@
 <?php include_once 'templates/header.php'; ?>
+<?php
+/**
+ * @var $stmt
+ */
+?>
 <main role="main">
     <div class="album py-5 bg-light">
         <div class="container">
@@ -13,7 +18,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php while($row = $result->fetch_assoc()): ?>
+                <?php while($row = $stmt->fetch()): ?>
                 <tr>
                     <th scope="row"><?=$row['id']?></th>
                     <td><img src="/images/<?=$row['img']?>"/></td>
@@ -25,7 +30,7 @@
                     </td>
                 </tr>
                 <?php endwhile ?>
-                <?php if ($result->num_rows === 0): ?>
+                <?php if ($stmt->rowCount() === 0): ?>
                     <tr>
                         <td colspan="4" align="center">Not found</td>
                     </tr>

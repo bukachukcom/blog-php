@@ -1,9 +1,10 @@
 <?php
 /**
- * @var $mysqli
+ * @var $pdo
  */
-$user = checkUser($mysqli);
+$user = checkUser($pdo);
 
-$result = $mysqli->query("SELECT * from article WHERE userId = '" . $user['id'] . "' ORDER BY id DESC");
+$stmt = $pdo->prepare("SELECT * from article WHERE userId = ? ORDER BY id DESC");
+$stmt->execute([$user['id']]);
 
 require_once 'templates/articles.php';

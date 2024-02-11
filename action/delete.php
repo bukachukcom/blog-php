@@ -1,18 +1,29 @@
 <?php
 /**
- * @var $mysqli
+ * @var $pdo
  */
-$user = checkUser($mysqli);
+$user = checkUser($pdo);
 
 $id = $_GET['id'] ?? null;
 if (!$id) {
-    header('Location: /?act=articles');
-    die();
+    redirect('/?act=articles');
 }
 
-$article = getUserArticle($mysqli, $id, $user['id']);
+$article = getUserArticle($pdo, $id, $user);
 
 @unlink($_SERVER['DOCUMENT_ROOT'] . "/images/" . $article['img']);
 
-$mysqli->query("DELETE FROM article WHERE id = " . $id . " AND userId = " . $user['id']);
-header('Location: /?act=articles');
+if ($user['isAdmin']) {
+    $stmt = $pdo->prepare("DELETE FROM article WHERE id = ?");
+    $stmt->execute([$id]);
+} else {
+    $stmt = $pdo->prepare("DELETE FROM article WHERE id = ? AND userId = ?");
+    $stmt->execute([$id, $user['id']]);
+}
+
+if ($user['isAdmin']) {
+    redirect('/?act=adminArticles');
+} else {
+    redirect('/?act=articles');
+}
+
