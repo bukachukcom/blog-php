@@ -32,3 +32,11 @@ CREATE TABLE `comment` (`id` int(20) unsigned NOT NULL AUTO_INCREMENT,
                         `createdAt` DATETIME DEFAULT NULL,
                         PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `category` (`id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+                        `name` varchar(255) NOT NULL,
+                        `createdAt` DATETIME DEFAULT NULL,
+                        PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table article add categoryId int(11) default null;

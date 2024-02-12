@@ -14,7 +14,11 @@ if (count($_POST) > 0) {
 
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['userId'] = $user['id'];
-        redirect('/?act=articles');
+        if ($user['isAdmin']) {
+            redirect('/admin');
+        } else {
+            redirect('/?act=articles');
+        }
     } else {
         $error = 'User is not found';
     }
