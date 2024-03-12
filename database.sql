@@ -39,4 +39,15 @@ CREATE TABLE `category` (`id` int(20) unsigned NOT NULL AUTO_INCREMENT,
                         PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-alter table article add categoryId int(11) default null;
+ALTER TABLE article ADD categoryId int(11) DEFAULT null;
+ALTER TABLE article ADD views INT(11) DEFAULT 0;
+
+CREATE TABLE `likes` (
+                         `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+                         `userId` int(20) unsigned NOT NULL,
+                         `ip` varchar(255) NOT NULL,
+                         `articleId` int(11) DEFAULT NULL,
+                         PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+

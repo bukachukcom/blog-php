@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var $pdo
+ */
 $user = null;
 $userId = (int)($_SESSION['userId'] ?? null);
 if ($userId) {

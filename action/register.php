@@ -11,6 +11,9 @@ if (count($_POST) > 0) {
 
     $stmt = $pdo->prepare("INSERT INTO user SET email = ?, password = ?");
     $stmt->execute([$email, $password]);
+
+    sendEmail('Регистрация прошла успешно', 'Поздравляем, регистрация прошла успешно');
+
     redirect('/?act=login');
 }
 

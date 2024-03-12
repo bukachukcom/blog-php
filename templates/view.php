@@ -4,6 +4,9 @@
             <div class="container">
                 <?php include_once 'templates/menu.php'; ?>
                 <h3><?=$article['title']?></h3>
+                <p>Количество просмотров: <?=$article['views']?></p>
+                <p>Количество лайков: <?=$article['likes']?></p>
+                <p><button><img width="50" id="like" src="/images/like.png" alt="Поставь лайк"></button></p>
                 <img src="/images/<?=$article['img']?>" alt="<?=$article['title']?>" align="left" vspace="5" hspace="5"/>
                 <p>
                     <?=$article['content']?>
@@ -32,4 +35,13 @@
         </div>
     </main>
 <?php include_once 'templates/footer.php'; ?>
-
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#like" ).on( "click", function() {
+            $.post( "/?act=like&id=<?=$article['id']?>", function( data ) {
+            }, "json");
+        });
+    });
+</script>

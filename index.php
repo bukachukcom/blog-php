@@ -9,6 +9,10 @@ require_once 'config/config.php';
 require_once 'config/router.php';
 require_once 'functions/helpers.php';
 
+require_once 'lib/PHPMailer/src/Exception.php';
+require_once 'lib/PHPMailer/src/PHPMailer.php';
+require_once 'lib/PHPMailer/src/SMTP.php';
+
 $dsn = "mysql:host=" . DB_HOST .";dbname=" . DB_NAME . ";charset=utf8";
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

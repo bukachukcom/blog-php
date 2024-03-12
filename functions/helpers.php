@@ -1,4 +1,54 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+function getClientIP()
+{
+    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+        $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+    }
+    $client = @$_SERVER['HTTP_CLIENT_IP'];
+    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+    $remote = $_SERVER['REMOTE_ADDR'];
+
+    if(filter_var($client, FILTER_VALIDATE_IP)) {
+        $ip = $client;
+    } elseif(filter_var($forward, FILTER_VALIDATE_IP)) {
+        $ip = $forward;
+    } else {
+        $ip = $remote;
+    }
+
+    return $ip;
+}
+function sendEmail(string $subject, string $body): void
+{
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host = 'ssl://smtp.mail.ru';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'bukachuk_php@mail.ru';
+        $mail->Password = '8VzQSZNkQQsTvfikeEFC';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->CharSet = "UTF-8";
+        $mail->Port = 465;
+
+        $mail->setFrom('bukachuk_php@mail.ru');
+        $mail->addAddress('bukachuk@gmail.com');
+
+        $mail->isHTML();
+        $mail->Subject = $subject;
+        $mail->Body = $body;
+        $mail->AltBody = strip_tags($body);
+
+        $mail->send();
+    } catch (Exception) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        die();
+    }
+}
 function redirect(string $uri): void
 {
     header('Location: ' . $uri);
