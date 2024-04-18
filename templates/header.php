@@ -9,6 +9,19 @@
     <title>Мой блог</title>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/album.css" rel="stylesheet">
+    <?php if ($userDb): ?>
+    <script>
+        let socket = new WebSocket('ws://localhost:8081');
+        socket.onopen = function () {
+            socket.send(JSON.stringify({ email: '<?=$userDb['email']?>', initial: 1 }));
+        };
+        socket.onmessage = function (event) {
+            let message = JSON.parse(event.data);
+            alert('Вы получили комментарий к статье от пользователя ' + message.email)
+            console.log("Message from server ", event.data);
+        };
+    </script>
+    <?php endif ?>
 </head>
 <body>
 <header>
@@ -41,4 +54,6 @@
             </button>
         </div>
     </div>
+
+
 </header>

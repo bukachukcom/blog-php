@@ -3,6 +3,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+require 'vendor/autoload.php';
+
 session_start();
 
 require_once 'config/config.php';
@@ -20,6 +22,8 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES => false,
 ];
 $pdo = new PDO($dsn, DB_USER, DB_PASSWORD, $options);
+
+$userDb = getUser($pdo);
 
 if (isset($_REQUEST['act']) && !empty($routers[$_REQUEST['act']])) {
     require_once $routers[$_REQUEST['act']];
